@@ -79,12 +79,17 @@ void computeState() {
 
 void displayVolt(int val) {
   int numPos = 3;
-  disp.clear();
+  //disp.clear();
   disp.point(POINT_ON);
   while (val) {
+    Serial.println(numPos);
     disp.display(numPos, val % 10);
     val = val / 10;
-    numPos--;
+    --numPos;
+
+  }
+  if (numPos == 0) {
+    disp.display(0, 0x48);
   }
 }
 
