@@ -35,28 +35,8 @@ void setup() {
 
 void loop() {
   tmrOff.tick();
-  static bool flag = true;
-  if (tmr.elapsed()) flag = false;
-  btn.tick();
-  if (btn.isSingle()) {
-    flag = true;
-    tmr.start();
-  }
-  if (flag) {
-    displayVolt(getVoltage() * 100);
-  }
-  else {
-    disp.clear();
-    disp.point(POINT_OFF);
-  }
+  turnDisplay();
   computeState();
-}
-
-float getVoltage() {
-  int val = analogRead(SV);
-  float vPin = (val * VREF) / ADC_BIT;
-  float vInput = vPin / (R2 / (R1 + R2));
-  return vInput;
 }
 
 void offLine() {
@@ -65,6 +45,13 @@ void offLine() {
 
 void onLine() {
   digitalWrite(CTRL, LOW);
+}
+
+float getVoltage() {
+  int val = analogRead(SV);
+  float vPin = (val * VREF) / ADC_BIT;
+  float vInput = vPin / (R2 / (R1 + R2));
+  return vInput;
 }
 
 void ignition() {
@@ -99,5 +86,22 @@ void displayVolt(int val) {
     disp.display(pos, val % 10);
     val = val / 10;
     pos--;
+  }
+}
+
+void turnDisplay() {
+  btn.tick();
+  static bool flag = true;
+  if (tmr.elapsed()) flag = false;
+  if (btn.isSingle()) {
+    flag = true;
+    tmr.start();
+  }
+  if (flag) {
+    displayVolt(getVoltage() * 100);
+  }
+  else {
+    disp.clear();
+    disp.point(POINT_OFF);
   }
 }
