@@ -17,11 +17,10 @@ const float R1 = 30000.0;
 const float R2 = 10000.0;
 const float VREF = 5.0;
 const float ADC_BIT = 1024.0;
+const int RATIO = 100;
 const int OFF_MIN_VOLT = 1100;
 const int OFF_MAX_VOLT = 1110;
 const int ON_MIN_VOLT = 1130;
-
-int val;
 
 void setup() {
   Serial.begin(9600);
@@ -55,7 +54,7 @@ float getVoltage() {
 
 void ignition() {
   offLine();
-  int val = getVoltage() * 100;
+  int val = getVoltage() * RATIO;
   if (val < OFF_MIN_VOLT) {
     offLine();
   }
@@ -66,7 +65,7 @@ void ignition() {
 
 void computeState() {
   tmrOff.tick();
-  int val = getVoltage() * 100;
+  int val = getVoltage() * RATIO;
   if (val < OFF_MIN_VOLT) {
     if (!tmrOff.active()) {
       tmrOff.start();
@@ -79,13 +78,13 @@ void computeState() {
 }
 
 void displayVolt(int val) {
-  int pos = 3;
+  int numPos = 3;
   disp.clear();
   disp.point(POINT_ON);
   while (val) {
-    disp.display(pos, val % 10);
+    disp.display(numPos, val % 10);
     val = val / 10;
-    pos--;
+    numPos--;
   }
 }
 
@@ -98,7 +97,7 @@ void turnDisplay() {
     tmr.start();
   }
   if (flag) {
-    displayVolt(getVoltage() * 100);
+    displayVolt(getVoltage() * RATIO);
   }
   else {
     disp.clear();
