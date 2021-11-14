@@ -34,7 +34,6 @@ void setup() {
 }
 
 void loop() {
-  tmrOff.tick();
   turnDisplay();
   computeState();
 }
@@ -66,6 +65,7 @@ void ignition() {
 }
 
 void computeState() {
+  tmrOff.tick();
   int val = getVoltage() * 100;
   if (val < OFF_MIN_VOLT) {
     if (!tmrOff.active()) {
