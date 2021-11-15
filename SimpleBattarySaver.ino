@@ -13,8 +13,8 @@ GButton btn(BTN, LOW_PULL, NORM_OPEN);
 TimerMs tmr(10000, true, true);
 TimerMs tmrOff(3000, false, true);
 
-const float R1 = 30000.0;
-const float R2 = 10000.0;
+const float R1 = 20000.0;
+const float R2 = 5100.0;
 const float VREF = 5.0;
 const float ADC_BIT = 1024.0;
 const int RATIO = 100;
@@ -46,7 +46,12 @@ void onLine() {
 }
 
 float getVoltage() {
-  int val = analogRead(SV);
+  const int times = 1024;
+  static unsigned long int val = 0;
+  for(int i=0;i<times;i++){
+    val += analogRead(SV);
+  }
+  val /= times;
   float vPin = (val * VREF) / ADC_BIT;
   float vInput = vPin / (R2 / (R1 + R2));
   return vInput;
@@ -82,7 +87,6 @@ void displayVolt(int val) {
   //disp.clear();
   disp.point(POINT_ON);
   while (val) {
-    Serial.println(numPos);
     disp.display(numPos, val % 10);
     val = val / 10;
     --numPos;
