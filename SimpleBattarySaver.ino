@@ -45,7 +45,7 @@ void onLine() {
   digitalWrite(CTRL, LOW);
 }
 
-float getVoltage() {
+float getVoltage() { //Тут надо бы сделать RMS а не среднее арифметическое.
   const int times = 1024;
   static unsigned long int val = 0;
   for(int i=0;i<times;i++){
