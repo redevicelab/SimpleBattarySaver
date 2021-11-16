@@ -12,6 +12,7 @@ GyverTM1637 disp(CLK, DIO);
 GButton btn(BTN, LOW_PULL, NORM_OPEN);
 TimerMs tmr(10000, true, true);
 TimerMs tmrOff(3000, false, true);
+TimerMs tmrMess(200,true);
 
 const float R1 = 20000.0;
 const float R2 = 5100.0;
@@ -30,11 +31,18 @@ void setup() {
   disp.clear();
   disp.brightness(7);
   tmrOff.attach(offLine);
+  tmrMess.attach(sendDebug);
 }
 
 void loop() {
+  tmrMess.tick();
   turnDisplay();
   computeState();
+}
+
+void sendDebug(){
+    Serial.print("V=");
+    Serial.println(getVoltage());
 }
 
 void offLine() {
@@ -46,7 +54,7 @@ void onLine() {
 }
 
 float getVoltage() { //Тут надо бы сделать RMS а не среднее арифметическое.
-  const int times = 1024;
+  const int times = 256;
   static unsigned long int val = 0;
   for(int i=0;i<times;i++){
     val += analogRead(SV);
