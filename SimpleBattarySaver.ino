@@ -16,12 +16,14 @@ TimerMs tmrMess(200,true);
 
 const float R1 = 20000.0;
 const float R2 = 5100.0;
-const float VREF = 5.0;
+const float VREF = 4.95;
 const float ADC_BIT = 1024.0;
 const int RATIO = 100;
 const int OFF_MIN_VOLT = 1100;
 const int OFF_MAX_VOLT = 1110;
 const int ON_MIN_VOLT = 1130;
+
+float voltageValue;
 
 void setup() {
   Serial.begin(9600);
@@ -54,7 +56,7 @@ void onLine() {
 }
 
 float getVoltage() { //Тут надо бы сделать RMS а не среднее арифметическое.
-  const int times = 256;
+  const int times = 512;
   static unsigned long int val = 0;
   for(int i=0;i<times;i++){
     val += analogRead(SV);
